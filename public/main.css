@@ -12,12 +12,26 @@ h1 {
 
 table {
   width: 600px;
-  font-size: 24px;
+  font-size: 36px;
+
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+tr {
+  width: 200px;
 }
 
 td,th {
-  border: 1px solid black;
+  border: solid gray;
   text-indent: 5px;
+}
+
+img {
+
+  width: 300px;
 }
 
 #bottom-div{
