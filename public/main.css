@@ -34,8 +34,13 @@ td,th {
 }
 
 img {
-
+  padding-left: 200;
   width: 300px;
+}
+
+.detail-table {
+ font-size: 24px;
+ width: 400px;
 }
 
 #nav-div{
@@ -43,6 +48,7 @@ img {
   top:0;
   height: 50px;
 }
+
 
 #search-query {
  font-size: 24px;

@@ -136,28 +136,123 @@ var tableClick = function(event){
       } else
       {
         selected = event.target.parentElement.innerText;
-      var detailLink =  findLink(selected);
-      console.log("detail link below");
-      console.log(detailLink);
-      }
-      detailDiv = document.querySelector("#details");
-      detailDiv.innerText = selected;
+      };
+      var detailObject = findDetail(selected);
+      loadDetails(detailObject);
     }
   };
 
+var loadDetails = function(data){
+  detailDiv = document.querySelector("#details");
+  if (detailDiv.childNodes.length > 0){
+    while (detailDiv.childNodes.length > 0){ 
+      detailDiv.removeChild(detailDiv.childNodes[0]);
+    };
+  };
+  var image = document.createElement("img");
+  image.src = data.sprites.front_default; 
+ 
+  var table = document.createElement("table");
+  table.className = "detail-table";
+  detailDiv.appendChild(table);
+  var tableRow;
+  var tableData;
+  for (var i = 0;i<8;i++){
+    tableRow = document.createElement("tr");
+    table.appendChild(tableRow);
+    tableData = document.createElement("td");
+    tableRow.appendChild(tableData);
+    tableData = document.createElement("td");
+    tableRow.appendChild(tableData);
+  }
+  //for each parameter add a new row
+  console.log(data);
+  console.log(table.rows[0]);
+  table.rows[0].cells[0].innerText = data.name;
+  table.rows[0].cells[1].appendChild(image)
+  table.rows[1].cells[0].innerText = "Abilities";
+  if (data.abilities.length >0){
+  var detailText = "";
+  for (var i=0;i<data.abilities.length;i++){
+    if (detailText != ""){detailText += "\n"};
+    detailText += data.abilities[i].ability.name;
+    };
+  };
+  table.rows[1].cells[1].innerText = detailText;
+  table.rows[2].cells[0].innerText = "Forms";
+  detailText = "";
+  if (data.forms.length >0){
+   for (var i=0;i<data.forms.length;i++){
+     if (detailText != ""){detailText += "\n"};
+     detailText += data.forms[i].name;
+     };
+   };
+  table.rows[2].cells[1].innerText = detailText;
+  table.rows[2].cells[0].innerText = "Height";
+  table.rows[2].cells[1].innerText = data.height;
+  table.rows[3].cells[0].innerText = "Held items"
+  detailText = "";
+  if (data.held_items.length >0){
+   for (var i=0;i<data.held_items.length;i++){
+     if (detailText != ""){detailText += "\n"};
+     detailText += data.held_items[i].name;
+     };
+   };
+
+  table.rows[3].cells[1].innerText = detailText;
+  table.rows[4].cells[0].innerText = "Moves";
+  detailText = "";
+  if (data.moves.length >0){
+   for (var i=0;i<data.moves.length;i++){
+     if (detailText != ""){detailText += "\n"};
+     detailText += data.moves[i].move.name;
+     };
+   };
+    table.rows[4].cells[1].innerText = detailText;
+    table.rows[5].cells[0].innerText = "Stats";
+    detailText = "";
+    if (data.stats.length >0){
+     for (var i=0;i<data.stats.length;i++){
+       if (detailText != ""){detailText += "\n"};
+       detailText += data.stats[i].stat.name;
+       };
+     };
+    
+
+    table.rows[5].cells[1].innerText = detailText;
+    table.rows[6].cells[0].innerText = "Types";
+    detailText = "";
+    if (data.types.length >0){
+     for (var i=0;i<data.types.length;i++){
+       if (detailText != ""){detailText += "\n"};
+       detailText += data.types[i].type.name;
+       };
+     };
+    table.rows[6].cells[1].innerText = detailText;
+    table.rows[7].cells[0].innerText = "Weight";
+    table.rows[7].cells[1].innerText = data.weight;
+  
+}
+
 var loadSprites = function(){
-  console.log(pokemonDetails);
   var table = document.querySelector("table");
-  console.log(table.rows[0].cells[1].innerHTML);
   for (var i= 0; i< pokemonDetails.length;i++){
    var row = Math.floor(i/3);
    var col = i % 3;
-   console.log("i "+i);
-   console.log("row "+row);
-   console.log("col "+col);
    var spriteUrl = pokemonDetails[i].sprites.front_default;
    table.rows[row].cells[col].firstElementChild.src = spriteUrl;
   }
+}
+
+var findDetail = function(name){
+  if (pokemonDetails.length > 0){
+    for (var i=0; i< pokemonDetails.length; i++){
+      if (pokemonDetails[i].name == name){
+        return pokemonDetails[i];
+      }
+    }
+  }
+  return null;
 }
 
 var findLink = function(name){
