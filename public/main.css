@@ -1,6 +1,10 @@
 body {
- /* background-image: url("http://www.goliath.com/wp-content/uploads/2016/10/Pokemon-We-Really-Want-to-Eat.jpg");
-  background-repeat: no-repeat;*/
+    min-height: 800px;
+    background: yellow;
+   background: -webkit-linear-gradient(orange, yellow);
+   background:    -moz-linear-gradient(orange, yellow);
+   background:         linear-gradient(orange, yellow);
+   background-repeat: no-repeat;
   }
 
 h1 {
@@ -21,7 +25,7 @@ table.center {
 }
 
 tr {
-  width: 200px;
+  width: 150px;
 }
 
 td,th {
@@ -34,9 +38,9 @@ img {
   width: 300px;
 }
 
-#bottom-div{
+#nav-div{
   position: absolute;
-  bottom:0;
+  top:0;
   height: 50px;
 }
 
