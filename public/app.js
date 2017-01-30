@@ -7,18 +7,18 @@ var limit;
 var init = function(){
  // get all the pokemon
  setRequestParameters("http://pokeapi.co/api/v2/pokemon/?limit=80");
-  var event = document.createEvent("KeyboardEvent");
-  window.addEventListener(onkeydown,function(e){
-      e.preventDefault();
-      canvas.fillText(e.keyCode,150,150);
-    });
-  var upButton = document.querySelector("#up-button");
-  var downButton = document.querySelector("#down-button");
-  var searchButton = document.querySelector("#search-button");
-  upButton.onclick = getPrev;
-  downButton.onclick = getNext;
-  searchButton.onclick = getSearch;
-  };
+ var event = document.createEvent("KeyboardEvent");
+ window.addEventListener(onkeydown,function(e){
+  e.preventDefault();
+  canvas.fillText(e.keyCode,150,150);
+});
+ var upButton = document.querySelector("#up-button");
+ var downButton = document.querySelector("#down-button");
+ var searchButton = document.querySelector("#search-button");
+ upButton.onclick = getPrev;
+ downButton.onclick = getNext;
+ searchButton.onclick = getSearch;
+};
 
 var setRequestParameters = function(address){
   url = address;
@@ -33,23 +33,29 @@ var makeRequest = function(url,callback){
 };
 
 var requestComplete = function(){
+  var limit = 21;
   if (this.status !==200) return;
   var jsonString = this.responseText;
   parsedJSON =JSON.parse(jsonString);
   if (parsedJSON.results === undefined){
     console.log(parsedJSON);
     pokemonDetails.push(parsedJSON);
-    if (pokemonDetails.length == searchResults.length){
+    console.log("length "+pokemonDetails.length);
+    console.log("searchResults "+searchResults.length);
+    if (searchResults.length < 21){
+      limit = searchResults.length;
+    }
+    if (pokemonDetails.length == limit){
       sortDetails(pokemonDetails);
       loadSprites();
-      }
-    } else
-    {
+    }
+  } else
+  {
     pokemon = parsedJSON.results;  
     sortPokemon(pokemon);
     listPokemon(searchResults);
-    };
   };
+};
 
 var sortPokemon = function(data){
   data.sort(function(a,b){
@@ -121,26 +127,26 @@ var addTableRow = function(){
   var tableRow = document.createElement("tr");
   table.appendChild(tableRow);
   for (var i=0; i<3; i++){
-  var cell = document.createElement("td");
-  tableRow.appendChild(cell);
+    var cell = document.createElement("td");
+    tableRow.appendChild(cell);
   };
 }
 
 var tableClick = function(event){
-    if ((event.target.tagName === "TD")||(event.target.tagName === "IMG")){
-      console.log(event.path[0].innerText);
-      console.log(event);
-      var selected; 
-      if (event.target.tagName === "TD"){
-        selected = event.target.innerText;  
-      } else
-      {
-        selected = event.target.parentElement.innerText;
-      };
-      var detailObject = findDetail(selected);
-      loadDetails(detailObject);
-    }
-  };
+  if ((event.target.tagName === "TD")||(event.target.tagName === "IMG")){
+    console.log(event.path[0].innerText);
+    console.log(event);
+    var selected; 
+    if (event.target.tagName === "TD"){
+      selected = event.target.innerText;  
+    } else
+    {
+      selected = event.target.parentElement.innerText;
+    };
+    var detailObject = findDetail(selected);
+    loadDetails(detailObject);
+  }
+};
 
 var loadDetails = function(data){
   detailDiv = document.querySelector("#details");
@@ -151,7 +157,7 @@ var loadDetails = function(data){
   };
   var image = document.createElement("img");
   image.src = data.sprites.front_default; 
- 
+  
   var table = document.createElement("table");
   table.className = "detail-table";
   detailDiv.appendChild(table);
@@ -172,10 +178,10 @@ var loadDetails = function(data){
   table.rows[0].cells[1].appendChild(image)
   table.rows[1].cells[0].innerText = "Abilities";
   if (data.abilities.length >0){
-  var detailText = "";
-  for (var i=0;i<data.abilities.length;i++){
-    if (detailText != ""){detailText += "\n"};
-    detailText += data.abilities[i].ability.name;
+    var detailText = "";
+    for (var i=0;i<data.abilities.length;i++){
+      if (detailText != ""){detailText += "\n"};
+      detailText += data.abilities[i].ability.name;
     };
   };
   table.rows[1].cells[1].innerText = detailText;
@@ -185,53 +191,53 @@ var loadDetails = function(data){
    for (var i=0;i<data.forms.length;i++){
      if (detailText != ""){detailText += "\n"};
      detailText += data.forms[i].name;
-     };
    };
-  table.rows[2].cells[1].innerText = detailText;
-  table.rows[2].cells[0].innerText = "Height";
-  table.rows[2].cells[1].innerText = data.height;
-  table.rows[3].cells[0].innerText = "Held items"
-  detailText = "";
-  if (data.held_items.length >0){
+ };
+ table.rows[2].cells[1].innerText = detailText;
+ table.rows[2].cells[0].innerText = "Height";
+ table.rows[2].cells[1].innerText = data.height;
+ table.rows[3].cells[0].innerText = "Held items"
+ detailText = "";
+ if (data.held_items.length >0){
    for (var i=0;i<data.held_items.length;i++){
      if (detailText != ""){detailText += "\n"};
      detailText += data.held_items[i].name;
-     };
    };
+ };
 
-  table.rows[3].cells[1].innerText = detailText;
-  table.rows[4].cells[0].innerText = "Moves";
-  detailText = "";
-  if (data.moves.length >0){
+ table.rows[3].cells[1].innerText = detailText;
+ table.rows[4].cells[0].innerText = "Moves";
+ detailText = "";
+ if (data.moves.length >0){
    for (var i=0;i<data.moves.length;i++){
      if (detailText != ""){detailText += "\n"};
      detailText += data.moves[i].move.name;
-     };
    };
-    table.rows[4].cells[1].innerText = detailText;
-    table.rows[5].cells[0].innerText = "Stats";
-    detailText = "";
-    if (data.stats.length >0){
-     for (var i=0;i<data.stats.length;i++){
-       if (detailText != ""){detailText += "\n"};
-       detailText += data.stats[i].stat.name;
-       };
-     };
-    
+ };
+ table.rows[4].cells[1].innerText = detailText;
+ table.rows[5].cells[0].innerText = "Stats";
+ detailText = "";
+ if (data.stats.length >0){
+   for (var i=0;i<data.stats.length;i++){
+     if (detailText != ""){detailText += "\n"};
+     detailText += data.stats[i].stat.name;
+   };
+ };
+ 
 
-    table.rows[5].cells[1].innerText = detailText;
-    table.rows[6].cells[0].innerText = "Types";
-    detailText = "";
-    if (data.types.length >0){
-     for (var i=0;i<data.types.length;i++){
-       if (detailText != ""){detailText += "\n"};
-       detailText += data.types[i].type.name;
-       };
-     };
-    table.rows[6].cells[1].innerText = detailText;
-    table.rows[7].cells[0].innerText = "Weight";
-    table.rows[7].cells[1].innerText = data.weight;
-  
+ table.rows[5].cells[1].innerText = detailText;
+ table.rows[6].cells[0].innerText = "Types";
+ detailText = "";
+ if (data.types.length >0){
+   for (var i=0;i<data.types.length;i++){
+     if (detailText != ""){detailText += "\n"};
+     detailText += data.types[i].type.name;
+   };
+ };
+ table.rows[6].cells[1].innerText = detailText;
+ table.rows[7].cells[0].innerText = "Weight";
+ table.rows[7].cells[1].innerText = data.weight;
+ 
 }
 
 var loadSprites = function(){
@@ -241,7 +247,7 @@ var loadSprites = function(){
    var col = i % 3;
    var spriteUrl = pokemonDetails[i].sprites.front_default;
    table.rows[row].cells[col].firstElementChild.src = spriteUrl;
-  }
+ }
 }
 
 var findDetail = function(name){
@@ -257,11 +263,11 @@ var findDetail = function(name){
 
 var findLink = function(name){
   for (var i=0; i<pokemon.length;i++){
-     if (pokemon[i].name == name){
-      return pokemon[i].url;
-    }
+   if (pokemon[i].name == name){
+    return pokemon[i].url;
   }
-  return "";
+}
+return "";
 }
 
 
@@ -270,21 +276,21 @@ window.onload = init;
 var getNext = function(){
 // this is going to show the next of the searched pokemon
 if (offset + 21 < pokemon.length - 1){
-    offset +=21;
-    pokemonDetails = [];
-    listPokemon(pokemon);
-  }; 
+  offset +=21;
+  pokemonDetails = [];
+  listPokemon(pokemon);
+}; 
 } 
 
 var getPrev = function(){
 //this is going to show the previous of the searched pokemon
 if (offset > 20){
   offset -= 21;
-  } 
-  else
-  {
+} 
+else
+{
   offset = 0;
-  };
+};
 pokemonDetails = [];  
 listPokemon(pokemon);
 };
